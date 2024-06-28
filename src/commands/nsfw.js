@@ -1,0 +1,95 @@
+import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+
+/** @type {import('./index.js').Command} */
+export default {
+	data: {
+		name: 'nsfw',
+		description: 'Get a random or specified image with tags from e926.',
+		options: [
+			{
+				name: 'tags',
+				type: 3,
+				description: 'Tags to search for.',
+				required: false,
+			},
+			{
+				name: 'random',
+				type: 5,
+				description: 'Whether to return a random image or the latest. Defaults to true.',
+				required: false,
+			},
+		],
+		nsfw: true,
+	},
+	async execute(interaction) {
+		await interaction.deferReply();
+
+		let tags = interaction.options.getString('tags') || '';
+		const random = interaction.options.getBoolean('random') ?? true;
+
+		if (random && !tags.includes('order:')) tags += ' order:random';
+
+		const url = `https://e621.net/posts.json?tags=${tags}&limit=1`;
+
+		const response = await fetch(url, {
+			headers: {
+				'User-Agent': 'FurryBot',
+			},
+		});
+
+		if (!response.ok) {
+			await interaction.reply('Failed to fetch image.');
+			return;
+		}
+
+		const data = await response.json();
+		const posts = data.posts;
+
+		if (!posts.length) {
+			await interaction.reply('No images found.');
+			return;
+		}
+
+		const post = posts[0];
+
+		if (!post) {
+			await interaction.reply('No images found.');
+			return;
+		}
+
+		const embed = new EmbedBuilder()
+			.setTitle(`Post #${post.id}`)
+			.setURL(`https://e621.net/posts/${post.id}`)
+			.setImage(post.file.url)
+			.setColor('#0099ff');
+
+		if (post.tags.artist && post.tags.artist.length) {
+			embed.addFields({
+				name: 'Artist',
+				value: post.tags.artist.join(', ').slice(0, 1_024),
+			});
+		}
+
+		if (post.tags.character && post.tags.character.length) {
+			embed.addFields({
+				name: 'Character',
+				value: post.tags.character.join(', ').slice(0, 1_024),
+			});
+		}
+
+		if (post.description) {
+			embed.setDescription(post.description);
+		}
+
+		const actionRow = new ActionRowBuilder().addComponents(
+			new ButtonBuilder()
+				.setLabel('Source')
+				.setStyle(ButtonStyle.Link)
+				.setURL(`https://e621.net/posts/${post.id}`)
+				.setEmoji('🔗'),
+			new ButtonBuilder().setLabel('Download').setStyle(ButtonStyle.Link).setURL(post.file.url).setEmoji('⬇️'),
+		);
+
+		await interaction.editReply({ embeds: [embed], components: [actionRow] });
+	},
+};
