@@ -37,7 +37,7 @@ export default {
 		});
 
 		if (!response.ok) {
-			await interaction.reply('Failed to fetch image.');
+			await interaction.editReply('Failed to fetch image.');
 			return;
 		}
 
@@ -45,14 +45,14 @@ export default {
 		const posts = data.posts;
 
 		if (!posts.length) {
-			await interaction.reply('No images found.');
+			await interaction.editReply('No images found.');
 			return;
 		}
 
 		const post = posts[0];
 
 		if (!post) {
-			await interaction.reply('No images found.');
+			await interaction.editReply('No images found.');
 			return;
 		}
 
