@@ -11,14 +11,30 @@ export function registerEvents(commands, events, client) {
 	const interactionCreateEvent = {
 		name: Events.InteractionCreate,
 		async execute(interaction) {
-			if (interaction.isCommand()) {
-				const command = commands.get(interaction.commandName);
+			try {
+				if (interaction.isCommand()) {
+					const command = commands.get(interaction.commandName);
 
-				if (!command) {
-					throw new Error(`Command '${interaction.commandName}' not found.`);
+					if (!command) {
+						throw new Error(`Command '${interaction.commandName}' not found.`);
+					}
+
+					await command.execute(interaction);
 				}
-
-				await command.execute(interaction);
+			} catch (error) {
+				console.error(error);
+				// Check if is deferred
+				if (interaction.deferred || interaction.replied) {
+					await interaction.editReply({
+						content: 'There was an error while executing this command!',
+						ephemeral: true,
+					});
+				} else {
+					await interaction.reply({
+						content: 'There was an error while executing this command!',
+						ephemeral: true,
+					});
+				}
 			}
 		},
 	};
