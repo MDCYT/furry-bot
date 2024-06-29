@@ -1,4 +1,5 @@
-import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { ApplicationIntegrationType, InteractionContextType } from 'discord-api-types/v10';
+import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ApplicationCommandOptionType } from 'discord.js';
 
 /** @type {import('./index.js').Command} */
 export default {
@@ -8,22 +9,23 @@ export default {
 		options: [
 			{
 				name: 'tags',
-				type: 3,
+				type: ApplicationCommandOptionType.String,
 				description: 'Tags to search for.',
 				required: false,
 				autocomplete: true,
 			},
 			{
 				name: 'random',
-				type: 5,
+				type: ApplicationCommandOptionType.Boolean,
 				description: 'Whether to return a random image or the latest. Defaults to true.',
 				required: false,
 			},
 		],
 		nsfw: true,
-		contexts: [0, 1, 2],
-		integration_types: [0, 1],
+		contexts: [InteractionContextType.Guild, InteractionContextType.BotDM, InteractionContextType.PrivateChannel],
+		integration_types: [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall],
 	},
+
 	async execute(interaction) {
 		await interaction.deferReply();
 
