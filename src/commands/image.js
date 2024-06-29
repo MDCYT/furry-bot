@@ -97,7 +97,11 @@ export default {
 				.setStyle(ButtonStyle.Link)
 				.setURL(`https://e926.net/posts/${post.id}`)
 				.setEmoji('🔗'),
-			new ButtonBuilder().setLabel('Download').setStyle(ButtonStyle.Link).setURL(post.file.url).setEmoji('⬇️'),
+			new ButtonBuilder()
+				.setLabel('HD Download')
+				.setStyle(ButtonStyle.Link)
+				.setURL(post.file.url || post.sample.url || post.preview.url)
+				.setEmoji('⬇️'),
 		);
 
 		if (embed.data.image) {
