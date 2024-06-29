@@ -64,12 +64,14 @@ export default {
 			.setURL(`https://e621.net/posts/${post.id}`)
 			.setColor('#0099ff');
 
-		if (post.sample && post.sample.has) {
-			embed.setImage(post.sample.url);
-		} else if (post.preview && post.preview.url) {
-			embed.setImage(post.preview.url);
-		} else {
-			embed.setImage(post.file.url);
+		if (post.file.ext !== 'webm' || post.file.ext !== 'mp4') {
+			if (post.sample && post.sample.has) {
+				embed.setImage(post.sample.url);
+			} else if (post.preview && post.preview.url) {
+				embed.setImage(post.preview.url);
+			} else {
+				embed.setImage(post.file.url);
+			}
 		}
 
 		if (post.tags.artist && post.tags.artist.length) {
@@ -96,9 +98,21 @@ export default {
 				.setStyle(ButtonStyle.Link)
 				.setURL(`https://e621.net/posts/${post.id}`)
 				.setEmoji('🔗'),
-			new ButtonBuilder().setLabel('Download').setStyle(ButtonStyle.Link).setURL(post.file.url).setEmoji('⬇️'),
+			new ButtonBuilder()
+				.setLabel('HD Download')
+				.setStyle(ButtonStyle.Link)
+				.setURL(post.file.url || post.sample.url || post.preview.url)
+				.setEmoji('⬇️'),
 		);
 
-		await interaction.editReply({ embeds: [embed], components: [actionRow] });
+		if (embed.data.image) {
+			await interaction.editReply({ embeds: [embed], components: [actionRow] });
+		} else {
+			await interaction.editReply({
+				embeds: [embed],
+				components: [actionRow],
+				content: `**Video Post:** ${post.file.url || post.sample.url || post.preview.url}`,
+			});
+		}
 	},
 };
