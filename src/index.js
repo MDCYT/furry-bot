@@ -5,7 +5,7 @@ import { loadCommands, loadEvents } from './util/loaders.js';
 import { registerEvents } from './util/registerEvents.js';
 
 // Initialize the client
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages, GatewayIntentBits] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages] });
 
 // Load the events and commands
 const events = await loadEvents(new URL('events/', import.meta.url));
