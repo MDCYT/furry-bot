@@ -108,6 +108,10 @@ export default {
 			await interaction.editReply({ embeds: [embed], components: [actionRow] });
 		} else {
 			await interaction.editReply({
+				embeds: [embed],
+				components: [actionRow]
+			});
+			await interaction.followUp({
 				content: `**Video Post:**\n${post.file.url || post.sample.url || post.preview.url}`,
 			});
 		}
