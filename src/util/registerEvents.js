@@ -20,20 +20,30 @@ export function registerEvents(commands, events, client) {
 					}
 
 					await command.execute(interaction);
+				} else if (interaction.isAutocomplete()) {
+					const command = commands.get(interaction.commandName);
+
+					if (!command) {
+						throw new Error(`Command '${interaction.commandName}' not found.`);
+					}
+
+					await command.autocomplete(interaction);
 				}
 			} catch (error) {
 				console.error(error);
 				// Check if is deferred
-				if (interaction.deferred || interaction.replied) {
-					await interaction.editReply({
-						content: 'There was an error while executing this command!',
-						ephemeral: true,
-					});
-				} else {
-					await interaction.reply({
-						content: 'There was an error while executing this command!',
-						ephemeral: true,
-					});
+				if (interaction.isCommand()) {
+					if (interaction.deferred || interaction.replied) {
+						await interaction.editReply({
+							content: 'There was an error while executing this command!',
+							ephemeral: true,
+						});
+					} else {
+						await interaction.reply({
+							content: 'There was an error while executing this command!',
+							ephemeral: true,
+						});
+					}
 				}
 			}
 		},

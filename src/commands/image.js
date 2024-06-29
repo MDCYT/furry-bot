@@ -11,6 +11,7 @@ export default {
 				type: 3,
 				description: 'Tags to search for.',
 				required: false,
+				autocomplete: true,
 			},
 			{
 				name: 'random',
@@ -115,5 +116,35 @@ export default {
 				content: `[Video Post](${post.file.url || post.sample.url || post.preview.url})`,
 			});
 		}
+	},
+
+	async autocomplete(interaction) {
+		const tags = interaction.options.getFocused();
+		const lastTag = tags.split(' ').pop();
+
+		if (tags.trim().length === 0) return interaction.respond([{ name: 'order:random', value: 'order:random' }]);
+		if (lastTag.length <= 2) return interaction.respond([{ name: tags, value: tags }]);
+
+		const url = `https://e926.net/tags/autocomplete.json?search%5Bname_matches%5D=${lastTag}&expiry=7`;
+
+		const response = await fetch(url, {
+			headers: {
+				'User-Agent': 'FurryBot',
+			},
+		});
+
+		if (!response.ok) {
+			return interaction.respond([{ name: tags, value: tags }]);
+		}
+
+		const data = await response.json();
+		const fetchedTags = data.map((tag) => tag.name);
+
+		return interaction.respond(
+			fetchedTags.map((tag) => ({
+				name: `${tags.split(' ').slice(0, -1).join(' ')} ${tag}`,
+				value: `${tags.split(' ').slice(0, -1).join(' ')} ${tag}`,
+			})),
+		);
 	},
 };
