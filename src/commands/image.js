@@ -108,10 +108,12 @@ export default {
 			await interaction.editReply({ embeds: [embed], components: [actionRow] });
 		} else {
 			const video = await fetch(post.file.url);
+			// new BufferResolvable 
+			const buffer = await video.buffer();
 			await interaction.editReply({
 				embeds: [embed],
 				components: [actionRow],
-				files: [new AttachmentBuilder(video.body, `${post.id}.${post.file.ext}`).setSpoiler(true)],
+				files: [new AttachmentBuilder(buffer, `${post.id}.${post.file.ext}`).setSpoiler(true)],
 			});
 		}
 	},
