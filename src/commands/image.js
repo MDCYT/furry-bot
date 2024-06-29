@@ -63,8 +63,8 @@ export default {
 			.setURL(`https://e926.net/posts/${post.id}`)
 			.setColor('#0099ff');
 
-		if (post.file.ext !== 'webm' || post.file.ext !== 'mp4') {
-			if (post.sample && post.sample.has) {
+		if (post.file.ext !== 'webm') {
+			if (post.sample && post.sample.url) {
 				embed.setImage(post.sample.url);
 			} else if (post.preview && post.preview.url) {
 				embed.setImage(post.preview.url);
