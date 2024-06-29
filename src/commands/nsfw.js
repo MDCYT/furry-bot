@@ -20,6 +20,8 @@ export default {
 			},
 		],
 		nsfw: true,
+		contexts: [0, 1, 2],
+		integration_types: [0, 1],
 	},
 	async execute(interaction) {
 		await interaction.deferReply();
@@ -60,8 +62,15 @@ export default {
 		const embed = new EmbedBuilder()
 			.setTitle(`Post #${post.id}`)
 			.setURL(`https://e621.net/posts/${post.id}`)
-			.setImage(post.file.url)
 			.setColor('#0099ff');
+
+		if (post.sample && post.sample.has) {
+			embed.setImage(post.sample.url);
+		} else if (post.preview && post.preview.url) {
+			embed.setImage(post.preview.url);
+		} else {
+			embed.setImage(post.file.url);
+		}
 
 		if (post.tags.artist && post.tags.artist.length) {
 			embed.addFields({
