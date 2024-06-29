@@ -1,4 +1,4 @@
-import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } from 'discord.js';
 
 /** @type {import('./index.js').Command} */
 export default {
@@ -107,10 +107,11 @@ export default {
 		if (embed.data.image) {
 			await interaction.editReply({ embeds: [embed], components: [actionRow] });
 		} else {
+			const video = await fetch(post.file.url);
 			await interaction.editReply({
 				embeds: [embed],
 				components: [actionRow],
-				content: `**Video Post:** ${post.file.url || post.sample.url || post.preview.url}`,
+				files: [new AttachmentBuilder(video.body, `${post.id}.${post.file.ext}`).setSpoiler(true)],
 			});
 		}
 	},
