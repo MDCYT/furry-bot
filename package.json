@@ -13,6 +13,7 @@
 	},
 	"dependencies": {
 		"@discordjs/core": "^1.2.0",
+		"discord-api-types": "^0.37.91",
 		"discord.js": "^14.15.0",
 		"dotenv": "^16.3.1"
 	},
