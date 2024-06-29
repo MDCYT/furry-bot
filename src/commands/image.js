@@ -112,7 +112,7 @@ export default {
 				components: [actionRow]
 			});
 			await interaction.followUp({
-				content: `**Video Post:**\n${post.file.url || post.sample.url || post.preview.url}`,
+				content: `[Video Post](${post.file.url || post.sample.url || post.preview.url})`,
 			});
 		}
 	},
