@@ -12,7 +12,10 @@ export default {
 			.setDescription(
 				'This bot is a simple example of a Discord bot written in JavaScript using the Discord.js library.',
 			)
-			.addField('Source Code', '[GitHub](https://github.com/mdcyt/furry-bot)')
+			.addFields({
+				name: 'Source Code',
+				value: '[GitHub](https://github.com/mdcyt/furry-bot)',
+			})
 			.setColor('#0099ff');
 
 		await interaction.reply({ embeds: [embed] });
