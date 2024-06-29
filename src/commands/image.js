@@ -1,29 +1,4 @@
-import Buffer from 'node:buffer';
-import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } from 'discord.js';
-
-async function fetchVideoBuffer(url) {
-	try {
-		// Realiza la solicitud fetch al video
-		const response = await fetch(url);
-
-		// Verifica si la respuesta fue exitosa
-		if (!response.ok) {
-			throw new Error(`Error al descargar el video: ${response.statusText}`);
-		}
-
-		// Obtén el array buffer del video
-		const arrayBuffer = await response.arrayBuffer();
-
-		// Convierte el array buffer a un Buffer de Node.js
-		const buffer = Buffer.from(arrayBuffer);
-
-		// Retorna el Buffer
-		return buffer;
-	} catch (error) {
-		console.error(`Error: ${error.message}`);
-		return null;
-	}
-}
+import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 
 /** @type {import('./index.js').Command} */
 export default {
@@ -132,11 +107,10 @@ export default {
 		if (embed.data.image) {
 			await interaction.editReply({ embeds: [embed], components: [actionRow] });
 		} else {
-			const buffer = await fetchVideoBuffer(post.file.url);
 			await interaction.editReply({
 				embeds: [embed],
 				components: [actionRow],
-				files: [new AttachmentBuilder(buffer, `${post.id}.${post.file.ext}`)],
+				content: `**Video Post:**\n ${post.file.url || post.sample.url || post.preview.url}`,
 			});
 		}
 	},
