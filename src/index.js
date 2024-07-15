@@ -12,7 +12,6 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 
 // Initialize the express server
 const app = express();
-app.set('trust proxy', true);
 
 // Set up the server
 app.get('/', (req, res) => {
