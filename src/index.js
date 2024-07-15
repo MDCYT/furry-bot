@@ -23,12 +23,13 @@ app.get('/', (req, res) => {
 		req.ip ||
 		req.headers['x-forwarded-for'] ||
 		req.socket.remoteAddress;
+
 	if (ip.startsWith('::ffff:')) {
 		ip = ip.slice(7);
 	}
 
 	res.send(
-		`<body style="background-color: #36393f; color: #fff; font-family: Arial, sans-serif; text-align: center; padding-top: 20%;">Your IP address is: ${ip} :3</body>`,
+		`<body style="background-color: #36393f; color: #fff; font-family: Arial, sans-serif; text-align: center; padding-top: 20%;">Your IP address is: ${ip} :3 ${JSON.stringify(req.headers)}</body>`,
 	);
 });
 
