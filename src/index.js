@@ -25,14 +25,17 @@ app.get('/', (req, res) => {
 		req.headers['x-forwarded-for'] ||
 		req.socket.remoteAddress;
 
-	const country = req.headers['cf-ipcountry'] || 'US';
+	const ISOCountry = req.headers['cf-ipcountry'] || 'US';
+
+    // Get the country name
+    const country = countries.getName(ISOCountry, 'en');
 
 	if (ip.startsWith('::ffff:')) {
 		ip = ip.slice(7);
 	}
 
 	res.send(
-		`<body style="background-color: #36393f; color: #fff; font-family: Arial, sans-serif; text-align: center; padding-top: 20%;">Your IP address is: ${ip} :3</body>`,
+		`<body style="background-color: #36393f; color: #fff; font-family: Arial, sans-serif; text-align: center; padding-top: 20%;">Your IP address is: ${ip} :3<br>Your country is: ${country} &gt;&#47;&#47;&lt;</body>`
 	);
 });
 
@@ -47,6 +50,6 @@ registerEvents(commands, events, client);
 void client.login(process.env.DISCORD_TOKEN);
 
 // Start the server
-app.listen(PORT, () => {
+void app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`);
 });
