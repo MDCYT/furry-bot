@@ -12,11 +12,12 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 
 // Initialize the express server
 const app = express();
+app.set('trust proxy', true);
 
 // Set up the server
 app.get('/', (req, res) => {
 	// Show the ip address of the user
-	const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+	const ip = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 	res.send(
 		`<body style="background-color: #36393f; color: #fff; font-family: Arial, sans-serif; text-align: center; padding-top: 20%;">Your IP address is: ${ip} :3</body>`,
 	);
