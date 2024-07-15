@@ -2,6 +2,7 @@ import process from 'node:process';
 import { URL } from 'node:url';
 import { Client, GatewayIntentBits } from 'discord.js';
 import express from 'express';
+import countries from 'i18n-iso-countries';
 import { loadCommands, loadEvents } from './util/loaders.js';
 import { registerEvents } from './util/registerEvents.js';
 
@@ -12,6 +13,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 
 // Initialize the express server
 const app = express();
+app.set('trust proxy', true);
 
 // Set up the server
 app.get('/', (req, res) => {
@@ -23,12 +25,14 @@ app.get('/', (req, res) => {
 		req.headers['x-forwarded-for'] ||
 		req.socket.remoteAddress;
 
+	const country = req.headers['cf-ipcountry'] || 'US';
+
 	if (ip.startsWith('::ffff:')) {
 		ip = ip.slice(7);
 	}
 
 	res.send(
-		`<body style="background-color: #36393f; color: #fff; font-family: Arial, sans-serif; text-align: center; padding-top: 20%;">Your IP address is: ${ip} :3 ${JSON.stringify(req.headers)}</body>`,
+		`<body style="background-color: #36393f; color: #fff; font-family: Arial, sans-serif; text-align: center; padding-top: 20%;">Your IP address is: ${ip} :3</body>`,
 	);
 });
 
