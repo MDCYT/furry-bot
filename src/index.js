@@ -17,7 +17,7 @@ app.set('trust proxy', true);
 // Set up the server
 app.get('/', (req, res) => {
 	// Show the ip address of the user
-	let ip = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+	let ip = req.headers['cf-connecting-ip'] || req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 	if (ip.startsWith('::ffff:')) {
 		ip = ip.slice(7);
 	}
