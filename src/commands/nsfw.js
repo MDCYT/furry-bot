@@ -5,7 +5,7 @@ import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Application
 export default {
 	data: {
 		name: 'nsfw',
-		description: 'Get a random or specified image with tags from e926.',
+		description: 'Get a random or specified image with tags from e621.',
 		options: [
 			{
 				name: 'tags',
