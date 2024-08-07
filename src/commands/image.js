@@ -91,7 +91,7 @@ export default {
 		}
 
 		if (post.description) {
-			embed.setDescription(post.description).slice(0, 4_096);
+			embed.setDescription(post.description);
 		}
 
 		const actionRow = new ActionRowBuilder().addComponents(
